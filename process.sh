@@ -1,5 +1,3 @@
-
-
 ##FUNCTIONS ##
 writeTittle(){
   echo "  ___                                   __  __    _        __ "
@@ -42,6 +40,20 @@ killFunction (){
 					echo "NOT RESULT"
 				else 
 					kill $id
+				fi
+			;;
+			"RAM Usage")
+				echo "RAM USED BY EACH PROCESS: "
+				ps aux | awk '{print $4, $11}' | sort -k1r | head -n 15
+				res=$(ps aux | awk '{print $2, $4}' | sort -k2r | head -n 15) 
+				echo "SELECT THE PERCENTAGE OF THE PROCESS IN ORDER TO FINISH IT"
+				read perc
+				if [[ -z $perc || $perc -eq 0 ]]; then
+					echo "ERROR, VALOR NO PERMITIDO"
+				else
+					idErase=$(echo "$res" | grep $perc | awk '{print $1}' | head -n 1)
+					echo "ELIMINANDO PROCESO: $idErase"
+					kill $idErase
 				fi
 			;;
 
