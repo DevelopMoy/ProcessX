@@ -30,6 +30,26 @@ veriffyIfSU (){
   fi
 }
 
+killFunction (){
+	echo "CHOOSE IF YOU WANT TO KILL A PROCES BY:"
+	select option in Name "RAM Usage" "CPU Usage"
+	do
+		case $option in
+			Name)
+				echo "ENTER THE NAME OF THE PROCESS:"
+				read nameOfP
+				id=$(pgrep $nameOfP)
+				kill $id
+			;;
+
+		esac
+				
+
+	break
+	done
+
+}
+
 lookForP (){
   echo "WRITE THE PROCESS NAME"
   read name
@@ -62,6 +82,14 @@ while [[ $option != Exit ]]; do
         LookForAProcess)
           lookForP
         ;;
+
+	KillProcess)
+	  killFunction
+	;;
+
+	Exit)
+	  echo "THANKS FOR USING PROCESSX"
+	;;
 
         *)
           echo "INVALID OPTION"
