@@ -11,9 +11,8 @@ writeTittle(){
 
 createNewProcess (){
   echo "# WRITE THE NAME OF THE PROCESS IN ORDER TO START IT"
-  read name
-  $name &> processOutput.txt ## TRY TO RUN THE PROCESS AND THEN REDIRECT THE
-  #OUTPUT TO A FILE
+  read name	
+  bash $name &
 }
 
 showAllProcesses (){
@@ -36,10 +35,14 @@ killFunction (){
 	do
 		case $option in
 			Name)
-				echo "ENTER THE NAME OF THE PROCESS:"
+				echo "ENTER THE PROCESS NAME:"
 				read nameOfP
-				id=$(pgrep $nameOfP)
-				kill $id
+				id=$(pgrep $nameOfP | head -n 1)
+				if [[ -z $id ]]; then
+					echo "NOT RESULT"
+				else 
+					kill $id
+				fi
 			;;
 
 		esac
@@ -56,7 +59,7 @@ lookForP (){
   echo " ************** **************"
   res=$( ps -d | grep $name )
   if [[ -z $res  ]]; then
-    echo "NO SE ENCONTRARON COINCIDENCIAS"
+    echo "NO RESULTS"
   else
     echo $res
   fi
