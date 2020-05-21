@@ -46,20 +46,35 @@ killFunction (){
 				echo "RAM USED BY EACH PROCESS: "
 				ps aux | awk '{print $4, $11}' | sort -k1r | head -n 15
 				res=$(ps aux | awk '{print $2, $4}' | sort -k2r | head -n 15) 
-				echo "SELECT THE PERCENTAGE OF THE PROCESS IN ORDER TO FINISH IT"
+				echo "SELECT THE PERCENTAGE OF THE CHOOSEN PROCESS IN ORDER TO FINISH IT"
 				read perc
 				if [[ -z $perc || $perc -eq 0 ]]; then
-					echo "ERROR, VALOR NO PERMITIDO"
+					echo "NOT ALLOWED VALUE"
 				else
 					idErase=$(echo "$res" | grep $perc | awk '{print $1}' | head -n 1)
-					echo "ELIMINANDO PROCESO: $idErase"
+					echo "KILLING PROCESS: $idErase"
 					kill $idErase
 				fi
 			;;
-
+			"CPU Usage")
+				echo "CPU USED BY EACH PROCESS: "
+				ps aux | awk '{print $3, $11}' | sort -k1r | head -n 15
+				res=$(ps aux | awk '{print $2, $3}' | sort -k2r | head -n 15) 
+				echo "TEST: $res"
+				echo "SELECT THE PERCENTAGE OF THE CHOOSEN PROCESS IN ORDER TO FINISH IT"
+				read perc
+				if [[ -z $perc || $perc == 0 ]]; then
+					echo "NOT ALLOWED VALUE"
+				else
+					idErase=$(echo "$res" | grep $perc | awk '{print $1}' | head -n 1)
+					echo "KILLING PROCESS: $idErase"
+					kill $idErase
+				fi
+			;;
 		esac
 				
-
+	
+  	read -p "PRESS ENTER TO CONTINUE"
 	break
 	done
 
@@ -75,6 +90,7 @@ lookForP (){
   else
     echo $res
   fi
+  read -p "PRESS ENTER TO CONTINUE"
 }
 ##END FUNCTIONS ##
 
@@ -107,10 +123,12 @@ while [[ $option != Exit ]]; do
 	;;
 
         *)
-          echo "INVALID OPTION"
+	  echo "INVALID OPTION"
+  	  read -p "PRESS ENTER TO CONTINUE"
         ;;
 
       esac
+      clear
     break
     done
 done
