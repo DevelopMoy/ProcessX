@@ -60,7 +60,7 @@ killFunction (){
 				echo "CPU USED BY EACH PROCESS: "
 				ps aux | awk '{print $3, $11}' | sort -k1r | head -n 15
 				res=$(ps aux | awk '{print $2, $3}' | sort -k2r | head -n 15) 
-				echo "TEST: $res"
+				echo "$res"
 				echo "SELECT THE PERCENTAGE OF THE CHOOSEN PROCESS IN ORDER TO FINISH IT"
 				read perc
 				if [[ -z $perc || $perc == 0 ]]; then
@@ -81,9 +81,30 @@ killFunction (){
 }
 
 autoKillFunction (){
-	echo "Entro";
+	i=1
+	limit="null"
+	minimum=40
+	refreshRate=3
+	echo "Select the limit value that can handle each process, it should be greater than $minimum %"
+	read limit
+	if (( $(echo "$limit < $minimum" | bc -l) )); then
+		return 0
+	fi
+	echo " - - - - RUNNING AUTOKILL, PRESS CTRL + C TO FINISH THE SCRIPT - - - -"
 
-  read -p "PRESS ENTER TO CONTINUE"
+	while [[ $i < 2 ]]; do
+		var=$(ps aux | awk '{print $2, $3}' | sort -k2r | head -n 10)
+		for (( ind = 4; ind <= 20; ind+=2)); do
+			var2=$(echo $var | awk -v indexVar="$ind" '{print $indexVar}')
+			if (( $(echo "$var2 > $limit" | bc -l) )); then
+				echo "PROCESS USING TOO MUCH CPU $var2"
+				var3=$(echo $var | awk -v indexVar2="$ind" '{print $(indexVar2-1)}')
+				kill $var3
+				echo "PROCESS KILLED PID -> $var3"
+			fi
+		done
+		sleep $refreshRate
+	done
 }
 
 lookForP (){
@@ -125,7 +146,7 @@ while [[ $option != Exit ]]; do
 	;;
 
 	AutoKill)
-	  autoKillFunction
+	 autoKillFunction
 	;;
 
 	Exit)
