@@ -80,6 +80,12 @@ killFunction (){
 
 }
 
+autoKillFunction (){
+	echo "Entro";
+
+  read -p "PRESS ENTER TO CONTINUE"
+}
+
 lookForP (){
   echo "WRITE THE PROCESS NAME"
   read name
@@ -99,7 +105,7 @@ option="x"
 veriffyIfSU
 while [[ $option != Exit ]]; do
   writeTittle
-  select option in CreateProcess KillProcess ShowProcesses LookForAProcess Exit
+  select option in CreateProcess KillProcess ShowProcesses LookForAProcess AutoKill Exit
     do
       case $option in
         CreateProcess)
@@ -116,6 +122,10 @@ while [[ $option != Exit ]]; do
 
 	KillProcess)
 	  killFunction
+	;;
+
+	AutoKill)
+	  autoKillFunction
 	;;
 
 	Exit)
